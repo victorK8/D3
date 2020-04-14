@@ -56,11 +56,20 @@ var y_axis = d3.axisLeft()
 var chart_svg_0 = d3.select("#chart-0")
 .append("svg")     // Append a svg
 .attr("viewBox", [0, 0, width, height]) // SVG as a rectangular box (width * height)
-.append("g") 
-.attr("class","y-axis")
-.call(y_axis)
-.attr("class","x-axis")
+
+// Add axis
+var chart_svg_0_axis = chart_svg_0.append("g") // <g class="axis"> x-ticks <g class="axis">
+.attr("class", "axis"); 
+
+// add each axe
+chart_svg_0_axis.append("g") // <g class="x-axis"> x-ticks <g class="x-axis">
+.attr("class", "y-axis")
 .call(x_axis);
+
+chart_svg_0_axis.append("g") // <g class="y-axis"> y-ticks <g class="x-axis">
+.attr("class", "y-axis")
+.call(y_axis);
+
 
 
 
