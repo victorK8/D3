@@ -231,7 +231,7 @@ var svg2_g_yAxis_II_added = svg2_g.append("g")
     .call(yAxis_II)
 
 
-// Add hum
+// Add hum & air
 var svg1_bar_added = svg2_g.selectAll("bar")
       .data(data)
       .enter().append("circle")
@@ -240,6 +240,13 @@ var svg1_bar_added = svg2_g.selectAll("bar")
         .attr("cy", function(d) {return y_hum_air(d.hum);})
         .attr("r", 5);
 
+var svg1_bar_added = svg2_g.selectAll("bar")
+    .data(data)
+    .enter().append("circle")
+        .style("fill", "green")
+        .attr("cx", function(d) {return x(d.timestamp)})
+        .attr("cy", function(d) {return y_hum_air(d.air);})
+        .attr("r", 5);
 
 // Add horizontal grid
 ticks_vector = []
