@@ -21,12 +21,19 @@ data = [
     {"name": "F", "value": 55}
 ];
 
+data_2_scatter = [
+    {"name": "A", "cx": 5, "cy": 10, "r": 20},
+    {"name": "B", "cx": 4, "cy": 5, "r": 20},
+    {"name": "B", "cx": 9, "cy": 3, "r": 50},
+    {"name": "B", "cx": 1, "cy": 10, "r": 20},
+    {"name": "B", "cx": 0, "cy": 8, "r": 20},
+];
  
 /* ---- SET TITLE ------ */
 var TitleAdded = $("#title").append("<h1> Starting with d3.js => Some Examples </h1>");
 
 
-/* ---- CHART - 0 -----*/
+/* ---- CHART - 0 (BAR CHART) -----*/
 
 // Chart-0 Properties 
 var margin = {top: 20, right: 20, bottom: 70, left: 40};
@@ -77,3 +84,96 @@ var svg0_bar_added = svg0_g.selectAll("bar")
       .attr("width", 50)
       .attr("y", function(d) { return y(d.value); })
       .attr("height", function(d) { return  height - y(d.value); });
+
+
+
+
+/* ---- CHART - 1 (SCATTER CHART) -----*/
+
+// Chart-1 Properties 
+var margin = {top: 20, right: 20, bottom: 70, left: 40};
+var width = 600 - margin.left - margin.right;
+var height = 300 - margin.top - margin.bottom;
+var xTicks = 8;
+var yTicks = 8;
+
+
+// Scales
+var x = d3.scaleLinear().domain([0, d3.max(from_json_get(data_2_scatter,"cx"))]).range([0, width]);
+var y = d3.scaleLinear().domain([0, d3.max(from_json_get(data_2_scatter,"cy"))]).range([height, 0]);
+
+// Axis
+var xAxis = d3.axisBottom().scale(x).ticks(xTicks);
+var yAxis = d3.axisLeft().scale(y).ticks(yTicks);
+
+// <svg></svg> into chart-0 div
+var svg1 = d3.select("#chart-1").append("svg");
+
+// Add title. <svg> <text></text> </svg>
+var svg1_text = svg1.append("text")
+    .attr("class","chart-title")
+    .attr("x", width/2 -margin.left/1.2)
+    .attr("y", margin.top)
+    .text(" Scatter Chart Example ");
+
+// <svg><g></g></svg>
+var svg1_g = svg1.attr("width", width + margin.left + margin.right)
+    .attr("height", height + margin.top + margin.bottom)
+    .append("g")
+    .attr("transform","translate(" + margin.left + "," + margin.top + ")");
+
+// <svg><g><g class="x axis"></g></g></svg>
+var svg1_g_xAxis_added = svg1_g.append("g")
+    .attr("class", "x axis")
+    .attr("transform", "translate(0," + height + ")")
+    .call(xAxis)
+
+// <svg><g><g class="x axis"></g><g class="y axis"></g></g></svg>
+var svg1_g_yAxis_added = svg1_g.append("g")
+      .attr("class", "y axis")
+      .call(yAxis)
+
+// Add circles
+var svg1_bar_added = svg1_g.selectAll("bar")
+      .data(data_2_scatter)
+    .enter().append("circle")
+      .style("fill", "steelblue")
+      .attr("cx", function(d) {return x(d.cx)})
+      .attr("cy", function(d) {return y(d.cy);})
+      .attr("r", function(d) { return  d.r});
+
+// Add horizontal grid
+ticks_vector = []
+for(var i=0;i<d3.max(from_json_get(data_2_scatter,"cx"));i++){ticks_vector.push(i);}
+
+var svg1_bar_added = svg1_g.selectAll("bar")
+      .data(ticks_vector)
+    .enter().append("rect")
+      .style("fill", "black")
+      .attr("x", function(d) {return x(d)})
+      .attr("y",0)
+      .attr("width", 0.5)
+      .attr("height", height);
+
+// Add vertical grid
+ticks_vector = []
+for(var i=0;i<d3.max(from_json_get(data_2_scatter,"cy"));i++){ticks_vector.push(i);}
+
+var svg1_bar_added = svg1_g.selectAll("bar")
+      .data(ticks_vector)
+    .enter().append("rect")
+      .style("fill", "red")
+      .attr("x",0 )
+      .attr("y",function(d) {return y(d)})
+      .attr("width", width)
+      .attr("height", 0.5);
+
+
+
+/* ---- CHART - 2 (Different charts with a http request to a json file)*/
+
+// Get data into buffer var
+buffer = [];
+url = "https://www.ncdc.noaa.gov/cag/national/time-series/110-tavg-ytd-12-1895-2016.json?base_prd=true&begbaseyear=1901&endbaseyear=2000";
+d3.json(url,function(data){buffer=data; console.log(buffer)});
+
