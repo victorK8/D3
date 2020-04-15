@@ -1,6 +1,6 @@
 /* Example for Bar Chart */
 
-// Util functions
+/* ---- Util & Funcs ----*/
 function from_json_get(data_as_json_format, label_to_get_items){
     var items = [];
 
@@ -11,7 +11,7 @@ function from_json_get(data_as_json_format, label_to_get_items){
     return items
 }
 
-// Data to visualize (json format)
+/* ---- Data ---- */ 
 data = [
     {"name": "A", "value": 5},
     {"name": "B", "value": 6},
@@ -21,59 +21,61 @@ data = [
 ];
 
  
-/* 1. Set title */
-var TitleAdded = $("#title").append("<h1> Bar Chart Example </h1>");
-
-/* 2. Set Chart-0 */
-
-// Delimite size of svg
-width = 450;
-height = 350;
-padding = 150;
-
-//--- Create axis ---
-
-// Set linear scales
-var scale_x = d3.scaleLinear()
-.domain([0, data.length])
-.range([0, width - padding]);
+/* ---- SET TITLE ------ */
+var TitleAdded = $("#title").append("<h1> Chart Examples </h1>");
 
 
-// Set linear scale for y-axis
-var scale_y= d3.scaleLinear()
-.domain([0, d3.max(from_json_get(data,"value"))])
-.range([0, height - padding]);
+/* ---- CHART - 0 -----*/
 
-// Create axis and adding scales
-var x_axis = d3.axisBottom()
- .scale(scale_x);
+// Chart-0 Properties 
+var margin = {top: 20, right: 20, bottom: 70, left: 40},
+    width = 600 - margin.left - margin.right,
+    height = 300 - margin.top - margin.bottom;
 
-var y_axis = d3.axisLeft()
- .scale(scale_y)
+// Scales ==> domain([]) valores com input, range([]) su equivalencia en el svg
+var x = d3.scaleLinear().domain([0, data.length]).range([0, width]);
+var y = d3.scaleLinear().domain([0, d3.max()]).range([0, height]);
 
+// Axis
+var xAxis = d3.axisBottom().scale(x)
+var yAxis = d3.axisLeft().scale(y).ticks(data.length);
 
-// ---- Create svg and append to char-0 div DOM ---
-var chart_svg_0 = d3.select("#chart-0")
-.append("svg")     // Append a svg
-.attr("viewBox", [0, 0, width, height]) // SVG as a rectangular box (width * height)
+// <svg></svg> into chart-0 div
+var svg0 = d3.select("#chart-0").append("svg");
 
-// Add axis
-var chart_svg_0_axis = chart_svg_0.append("g") // <g class="axis"> x-ticks <g class="axis">
-.attr("class", "axis"); 
+var svg0_g = svg.attr("width", width + margin.left + margin.right)
+    .attr("height", height + margin.top + margin.bottom)
+    .append("g")
+    .attr("transform","translate(" + margin.left + "," + margin.top + ")");
 
-// add each axe
-chart_svg_0_axis.append("g") // <g class="x-axis"> x-ticks <g class="x-axis">
-.attr("class", "y-axis")
-.call(x_axis);
+/*
+  svg.append("g")
+      .attr("class", "x axis")
+      .attr("transform", "translate(0," + height + ")")
+      .call(xAxis)
+    .selectAll("text")
+      .style("text-anchor", "end")
+      .attr("dx", "-.8em")
+      .attr("dy", "-.55em")
+      .attr("transform", "rotate(-90)" );
 
-chart_svg_0_axis.append("g") // <g class="y-axis"> y-ticks <g class="x-axis">
-.attr("class", "y-axis")
-.call(y_axis);
+  svg.append("g")
+      .attr("class", "y axis")
+      .call(yAxis)
+    .append("text")
+      .attr("transform", "rotate(-90)")
+      .attr("y", 6)
+      .attr("dy", ".71em")
+      .style("text-anchor", "end")
+      .text("Value ($)");
 
+  svg.selectAll("bar")
+      .data(data)
+    .enter().append("rect")
+      .style("fill", "steelblue")
+      .attr("x", function(d) { return x(d.name); })
+      .attr("width", x.rangeBand())
+      .attr("y", function(d) { return y(d.value); })
+      .attr("height", function(d) { return height - y(d.value); });
 
-
-
-
-
-
-
+*/
