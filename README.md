@@ -8,4 +8,3 @@ D3 is not a monolithic framework that seeks to provide every conceivable feature
 
 **How does d3 get DOM elements?** You can get DOM elements by ```d3.select([selector])```.
 
-## Examples
