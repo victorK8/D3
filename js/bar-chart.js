@@ -231,22 +231,56 @@ var svg2_g_yAxis_II_added = svg2_g.append("g")
     .call(yAxis_II)
 
 
-// Add hum & air
-var svg1_bar_added = svg2_g.selectAll("bar")
+// Add hum & air as scatter
+var svg2_hum_added = svg2_g.selectAll("plot")
       .data(data)
       .enter().append("circle")
         .style("fill", "red")
-        .attr("cx", function(d) {return x(d.timestamp)})
+        .attr("cx", function(d) {return x(d.timestamp);})
         .attr("cy", function(d) {return y_hum_air(d.hum);})
         .attr("r", 5);
 
-var svg1_bar_added = svg2_g.selectAll("bar")
+var svg2_hum_added = svg2_g.selectAll("plot")
+    .data(data)
+    .enter().append("text")
+        .attr("class","label")
+        .attr("x", function(d,i) {return 8 + x(d.timestamp);})
+        .attr("y", function(d,i) {return y_hum_air(d.hum);})
+        .text(function(d,i) {
+            var str_to_return = "";
+            if(i==0 || i==(data.length-1)){
+                str_to_return = "";
+            }else{
+                str_to_return = d.air.toString() + " [m/s]";
+            }
+            return str_to_return;
+        });
+
+var svg2_air_added = svg2_g.selectAll("plot")
     .data(data)
     .enter().append("circle")
         .style("fill", "green")
-        .attr("cx", function(d) {return x(d.timestamp)})
-        .attr("cy", function(d) {return y_hum_air(d.air);})
-        .attr("r", 5);
+        .attr("cx", function(d,i) {return x(d.timestamp)})
+        .attr("cy", function(d,i) {return y_hum_air(d.air);})
+        .attr("r", 5)
+
+var svg2_hum_added = svg2_g.selectAll("plot")
+    .data(data)
+    .enter().append("text")
+        .attr("class","label")
+        .attr("x", function(d) {return 8 + x(d.timestamp);})
+        .attr("y", function(d) {return y_hum_air(d.air);})
+        .text(function(d,i) {
+            var str_to_return = "";
+            if(i==0 || i==(data.length-1)){
+                str_to_return = "";
+            }else{
+                str_to_return = d.air.toString() + " [m/s]";
+            }
+            return str_to_return;
+        });
+       
+
 
 // Add horizontal grid
 ticks_vector = []
